@@ -1,0 +1,27 @@
+{
+  "name": "video-editing-platform",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "lint": "eslint src",
+    "migrate": "prisma migrate dev",
+    "generate": "prisma generate"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.6.0",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "express-validator": "^7.0.1",
+    "fluent-ffmpeg": "^2.1.2",
+    "multer": "^1.4.5-lts.1",
+    "winston": "^3.8.2"
+  },
+  "devDependencies": {
+    "eslint": "^8.30.0",
+    "eslint-plugin-import": "^2.26.0",
+    "nodemon": "^3.0.1",
+    "prisma": "^5.22.0"
+  }
+}

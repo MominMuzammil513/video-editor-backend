@@ -1,0 +1,525 @@
+{
+    "info": {
+      "_postman_id": "c7a9b3e2-4f5a-4b2c-9d7e-1f8a3c6b7e9d",
+      "name": "Video Editing API",
+      "description": "API for video editing platform backend, supporting video upload, trimming, subtitle addition, rendering, and downloading. Built with Node.js, Express, Prisma, and Docker.",
+      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+      {
+        "name": "Upload Video",
+        "request": {
+          "method": "POST",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "multipart/form-data",
+              "type": "text"
+            }
+          ],
+          "body": {
+            "mode": "formdata",
+            "formdata": [
+              {
+                "key": "video",
+                "type": "file",
+                "src": [],
+                "description": "Select a .mp4 or .mov video file"
+              }
+            ]
+          },
+          "url": {
+            "raw": "{{baseUrl}}/api/videos/upload",
+            "host": ["{{baseUrl}}"],
+            "path": ["api", "videos", "upload"]
+          },
+          "description": "Uploads a video file (.mp4 or .mov) and stores its metadata in the database."
+        },
+        "response": [
+          {
+            "name": "Success",
+            "originalRequest": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "multipart/form-data"
+                }
+              ],
+              "body": {
+                "mode": "formdata",
+                "formdata": [
+                  {
+                    "key": "video",
+                    "type": "file",
+                    "src": []
+                  }
+                ]
+              },
+              "url": {
+                "raw": "{{baseUrl}}/api/videos/upload",
+                "host": ["{{baseUrl}}"],
+                "path": ["api", "videos", "upload"]
+              }
+            },
+            "status": "Created",
+            "code": 201,
+            "_postman_previewlanguage": "json",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": "{\"id\":1,\"name\":\"sample.mp4\",\"path\":\"/app/uploads/123456789-sample.mp4\",\"size\":10485760,\"duration\":120.5,\"status\":\"UPLOADED\",\"createdAt\":\"2025-04-26T00:00:00.000Z\",\"updatedAt\":\"2025-04-26T00:00:00.000Z\"}"
+          },
+          {
+            "name": "Invalid File Type",
+            "originalRequest": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "multipart/form-data"
+                }
+              ],
+              "body": {
+                "mode": "formdata",
+                "formdata": [
+                  {
+                    "key": "video",
+                    "type": "file",
+                    "src": []
+                  }
+                ]
+              },
+              "url": {
+                "raw": "{{baseUrl}}/api/videos/upload",
+                "host": ["{{baseUrl}}"],
+                "path": ["api", "videos", "upload"]
+              }
+            },
+            "status": "Bad Request",
+            "code": 400,
+            "_postman_previewlanguage": "json",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": "{\"error\":{\"message\":\"Invalid file type\",\"status\":400}}"
+          }
+        ]
+      },
+      {
+        "name": "Trim Video",
+        "request": {
+          "method": "POST",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json",
+              "type": "text"
+            }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\"startTime\": \"00:00:05\", \"endTime\": \"00:00:15\"}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          },
+          "url": {
+            "raw": "{{baseUrl}}/api/videos/:id/trim",
+            "host": ["{{baseUrl}}"],
+            "path": ["api", "videos", ":id", "trim"],
+            "variable": [
+              {
+                "key": "id",
+                "value": "1",
+                "description": "ID of the uploaded video"
+              }
+            ]
+          },
+          "description": "Creates a trim operation for a video, specifying start and end times."
+        },
+        "response": [
+          {
+            "name": "Success",
+            "originalRequest": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\"startTime\": \"00:00:05\", \"endTime\": \"00:00:15\"}",
+                "options": {
+                  "raw": {
+                    "language": "json"
+                  }
+                }
+              },
+              "url": {
+                "raw": "{{baseUrl}}/api/videos/:id/trim",
+                "host": ["{{baseUrl}}"],
+                "path": ["api", "videos", ":id", "trim"],
+                "variable": [
+                  {
+                    "key": "id",
+                    "value": "1"
+                  }
+                ]
+              }
+            },
+            "status": "OK",
+            "code": 200,
+            "_postman_previewlanguage": "json",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": "{\"id\":1,\"videoId\":1,\"operationType\":\"TRIM\",\"order\":1,\"createdAt\":\"2025-04-26T00:00:00.000Z\",\"trimOperation\":{\"id\":1,\"operationId\":1,\"startTime\":\"00:00:05\",\"endTime\":\"00:00:15\",\"createdAt\":\"2025-04-26T00:00:00.000Z\"}}"
+          },
+          {
+            "name": "Video Not Found",
+            "originalRequest": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\"startTime\": \"00:00:05\", \"endTime\": \"00:00:15\"}",
+                "options": {
+                  "raw": {
+                    "language": "json"
+                  }
+                }
+              },
+              "url": {
+                "raw": "{{baseUrl}}/api/videos/:id/trim",
+                "host": ["{{baseUrl}}"],
+                "path": ["api", "videos", ":id", "trim"],
+                "variable": [
+                  {
+                    "key": "id",
+                    "value": "999"
+                  }
+                ]
+              }
+            },
+            "status": "Not Found",
+            "code": 404,
+            "_postman_previewlanguage": "json",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": "{\"error\":{\"message\":\"Video not found\",\"status\":404}}"
+          }
+        ]
+      },
+      {
+        "name": "Add Subtitles",
+        "request": {
+          "method": "POST",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json",
+              "type": "text"
+            }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\"text\": \"Hello World\", \"startTime\": \"00:00:05\", \"endTime\": \"00:00:10\"}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          },
+          "url": {
+            "raw": "{{baseUrl}}/api/videos/:id/subtitles",
+            "host": ["{{baseUrl}}"],
+            "path": ["api", "videos", ":id", "subtitles"],
+            "variable": [
+              {
+                "key": "id",
+                "value": "1",
+                "description": "ID of the uploaded video"
+              }
+            ]
+          },
+          "description": "Creates a subtitle operation for a video, specifying text and time range."
+        },
+        "response": [
+          {
+            "name": "Success",
+            "originalRequest": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\"text\": \"Hello World\", \"startTime\": \"00:00:05\", \"endTime\": \"00:00:10\"}",
+                "options": {
+                  "raw": {
+                    "language": "json"
+                  }
+                }
+              },
+              "url": {
+                "raw": "{{baseUrl}}/api/videos/:id/subtitles",
+                "host": ["{{baseUrl}}"],
+                "path": ["api", "videos", ":id", "subtitles"],
+                "variable": [
+                  {
+                    "key": "id",
+                    "value": "1"
+                  }
+                ]
+              }
+            },
+            "status": "OK",
+            "code": 200,
+            "_postman_previewlanguage": "json",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": "{\"id\":2,\"videoId\":1,\"operationType\":\"SUBTITLE\",\"order\":2,\"createdAt\":\"2025-04-26T00:00:00.000Z\",\"subtitleOperation\":{\"id\":1,\"operationId\":2,\"text\":\"Hello World\",\"startTime\":\"00:00:05\",\"endTime\":\"00:00:10\",\"createdAt\":\"2025-04-26T00:00:00.000Z\"}}"
+          },
+          {
+            "name": "Invalid Input",
+            "originalRequest": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\"text\": \"\", \"startTime\": \"00:00:05\", \"endTime\": \"00:00:10\"}",
+                "options": {
+                  "raw": {
+                    "language": "json"
+                  }
+                }
+              },
+              "url": {
+                "raw": "{{baseUrl}}/api/videos/:id/subtitles",
+                "host": ["{{baseUrl}}"],
+                "path": ["api", "videos", ":id", "subtitles"],
+                "variable": [
+                  {
+                    "key": "id",
+                    "value": "1"
+                  }
+                ]
+              }
+            },
+            "status": "Bad Request",
+            "code": 400,
+            "_postman_previewlanguage": "json",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": "{\"errors\":[{\"msg\":\"Subtitle text is required\",\"param\":\"text\",\"location\":\"body\"}]}"
+          }
+        ]
+      },
+      {
+        "name": "Render Video",
+        "request": {
+          "method": "POST",
+          "header": [],
+          "url": {
+            "raw": "{{baseUrl}}/api/videos/:id/render",
+            "host": ["{{baseUrl}}"],
+            "path": ["api", "videos", ":id", "render"],
+            "variable": [
+              {
+                "key": "id",
+                "value": "1",
+                "description": "ID of the uploaded video"
+              }
+            ]
+          },
+          "description": "Renders the video by applying all trim and subtitle operations in order."
+        },
+        "response": [
+          {
+            "name": "Success",
+            "originalRequest": {
+              "method": "POST",
+              "header": [],
+              "url": {
+                "raw": "{{baseUrl}}/api/videos/:id/render",
+                "host": ["{{baseUrl}}"],
+                "path": ["api", "videos", ":id", "render"],
+                "variable": [
+                  {
+                    "key": "id",
+                    "value": "1"
+                  }
+                ]
+              }
+            },
+            "status": "OK",
+            "code": 200,
+            "_postman_previewlanguage": "json",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": "{\"id\":1,\"videoId\":1,\"outputPath\":\"/app/uploads/rendered-123456789-sample.mp4\",\"status\":\"COMPLETED\",\"createdAt\":\"2025-04-26T00:00:00.000Z\",\"updatedAt\":\"2025-04-26T00:00:00.000Z\"}"
+          },
+          {
+            "name": "Video Not Found",
+            "originalRequest": {
+              "method": "POST",
+              "header": [],
+              "url": {
+                "raw": "{{baseUrl}}/api/videos/:id/render",
+                "host": ["{{baseUrl}}"],
+                "path": ["api", "videos", ":id", "render"],
+                "variable": [
+                  {
+                    "key": "id",
+                    "value": "999"
+                  }
+                ]
+              }
+            },
+            "status": "Not Found",
+            "code": 404,
+            "_postman_previewlanguage": "json",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": "{\"error\":{\"message\":\"Video not found\",\"status\":404}}"
+          }
+        ]
+      },
+      {
+        "name": "Download Video",
+        "request": {
+          "method": "GET",
+          "header": [],
+          "url": {
+            "raw": "{{baseUrl}}/api/videos/:id/download",
+            "host": ["{{baseUrl}}"],
+            "path": ["api", "videos", ":id", "download"],
+            "variable": [
+              {
+                "key": "id",
+                "value": "1",
+                "description": "ID of the uploaded video"
+              }
+            ]
+          },
+          "description": "Downloads the latest rendered video file."
+        },
+        "response": [
+          {
+            "name": "Success",
+            "originalRequest": {
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "{{baseUrl}}/api/videos/:id/download",
+                "host": ["{{baseUrl}}"],
+                "path": ["api", "videos", ":id", "download"],
+                "variable": [
+                  {
+                    "key": "id",
+                    "value": "1"
+                  }
+                ]
+              }
+            },
+            "status": "OK",
+            "code": 200,
+            "_postman_previewlanguage": "text",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "video/mp4"
+              },
+              {
+                "key": "Content-Disposition",
+                "value": "attachment; filename=\"sample.mp4\""
+              }
+            ],
+            "body": "Binary video file"
+          },
+          {
+            "name": "No Render Found",
+            "originalRequest": {
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "{{baseUrl}}/api/videos/:id/download",
+                "host": ["{{baseUrl}}"],
+                "path": ["api", "videos", ":id", "download"],
+                "variable": [
+                  {
+                    "key": "id",
+                    "value": "1"
+                  }
+                ]
+              }
+            },
+            "status": "Not Found",
+            "code": 404,
+            "_postman_previewlanguage": "json",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": "{\"error\":{\"message\":\"No completed render found\",\"status\":404}}"
+          }
+        ]
+      }
+    ],
+    "variable": [
+      {
+        "key": "baseUrl",
+        "value": "http://localhost:3000",
+        "description": "Base URL of the video editing API"
+      }
+    ]
+  }
